@@ -5,7 +5,7 @@ using System;
 public class ArduinoController : MonoBehaviour
 {
     private SerialPort serialPort;
-    private string portName = "COM3"; // 需要根据实际Arduino连接的端口修改
+    private string portName = "COM3"; // 需要根據實際Arduino連接的連接埠修改
     private const int baudRate = 9600;
     private bool isConnected = false;
 
@@ -23,11 +23,11 @@ public class ArduinoController : MonoBehaviour
             serialPort.WriteTimeout = 100;
             serialPort.Open();
             isConnected = true;
-            Debug.Log("成功连接到Arduino");
+            Debug.Log("成功連接到Arduino");
         }
         catch (Exception e)
         {
-            Debug.LogError($"无法连接到Arduino: {e.Message}");
+            Debug.LogError($"無法連接到Arduino: {e.Message}");
             isConnected = false;
         }
     }
@@ -38,19 +38,19 @@ public class ArduinoController : MonoBehaviour
 
         try
         {
-            // 读取Arduino发送的数据
+            // 讀取Arduino發送的數據
             if (serialPort.BytesToRead > 0)
             {
                 string message = serialPort.ReadLine();
                 ProcessArduinoMessage(message.Trim());
             }
 
-            // 示例：按下空格键发送开灯指令
+            // 示例：按下空格鍵發送開燈指令
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 TurnOnLight();
             }
-            // 按下R键发送关灯指令
+            // 按下R鍵發送關燈指令
             if (Input.GetKeyDown(KeyCode.R))
             {
                 TurnOffLight();
@@ -58,7 +58,7 @@ public class ArduinoController : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"读取数据时出错: {e.Message}");
+            Debug.LogWarning($"讀取數據時出錯: {e.Message}");
         }
     }
 
@@ -66,13 +66,13 @@ public class ArduinoController : MonoBehaviour
     {
         switch (message)
         {
-            case "y": // 按钮被按下
-                Debug.Log("Arduino按钮被按下");
-                // 在这里添加按钮按下时的处理逻辑
+            case "y": // 按鈕被按下
+                Debug.Log("Arduino按鈕被按下");
+                // 在這裡添加按鈕按下時的處理邏輯
                 break;
-            case "n": // 按钮被释放
-                Debug.Log("Arduino按钮被释放");
-                // 在这里添加按钮释放时的处理逻辑
+            case "n": // 按鈕被釋放
+                Debug.Log("Arduino按鈕被釋放");
+                // 在這裡添加按鈕釋放時的處理邏輯
                 break;
         }
     }
@@ -82,7 +82,7 @@ public class ArduinoController : MonoBehaviour
         if (isConnected)
         {
             serialPort.Write("1");
-            Debug.Log("发送开灯指令");
+            Debug.Log("發送開燈指令");
         }
     }
 
@@ -91,7 +91,7 @@ public class ArduinoController : MonoBehaviour
         if (isConnected)
         {
             serialPort.Write("0");
-            Debug.Log("发送关灯指令");
+            Debug.Log("發送關燈指令");
         }
     }
 
