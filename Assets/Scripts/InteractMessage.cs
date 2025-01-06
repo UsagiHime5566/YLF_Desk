@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using HimeLib;
 
@@ -23,6 +24,11 @@ public class InteractMessage : MonoBehaviour
     public float cdTime = 90f;
     private float nextCDTime = 3f;
 
+    [Header("UI")]
+    public Text RemoteSignalText;
+    public Text GlobalCDText;
+    public Text LocalCDText;
+
 
     public System.Action OnShootingButtonPressed;
 
@@ -38,6 +44,8 @@ public class InteractMessage : MonoBehaviour
 
     //自動迴圈檢查數據, 這邊是主機聽資料自動做噴水與CD
     void HandleReceivedValue(int value){
+        RemoteSignalText.text = value.ToString();
+
 
         //如果遠端數據變成1的話
         //手機只有變1功能
@@ -65,6 +73,9 @@ public class InteractMessage : MonoBehaviour
                     nextCDTime_online = 2147483648f;    //避免再次檢查到
                 }
             }
+
+            GlobalCDText.text = $"{nextCDTime_online - Time.time:F2}";
+            LocalCDText.text = $"{nextCDTime - Time.time:F2}";
         }
     }
 
