@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : HimeLib.SingletonMono<GameManager>
 {
     public Toggle MainComputerToggle;
+    public Text networkStatusText;
 
     [Header("海豚")]
     public RenderTexture DolphinRender;
@@ -31,6 +32,9 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
             IsMainComputer = x;
         });
         MainComputerToggle.isOn = SystemConfig.Instance.GetData<bool>("MainComputerToggle", true);
+
+        if(networkStatusText)
+            StartCoroutine(CheckNetworkStatus());
     }
 
     // Update is called once per frame
@@ -65,5 +69,16 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
 
     void SaveDolphScale(){
         SystemConfig.Instance.SaveData("DophinScale", DophinScale);
+    }
+
+    IEnumerator CheckNetworkStatus(){
+        while(true){
+            if(NetworkChecker.Instance.IsNetworkAvailable)
+                networkStatusText.text = "網路連接：正常";
+            else
+                networkStatusText.text = "網路連接：失敗";
+
+            yield return new WaitForSeconds(1f);
+        }
     }
 }
