@@ -23,6 +23,9 @@ public class InteractMessage : MonoBehaviour
     public float cdTime = 90f;
     private float nextCDTime = 3f;
 
+
+    public System.Action OnShootingButtonPressed;
+
     void Start()
     {
         arduinoInteractive.OnRecieveData += OnRecieveData;
@@ -35,15 +38,17 @@ public class InteractMessage : MonoBehaviour
 
     //自動迴圈檢查數據, 這邊是主機聽資料自動做噴水與CD
     void HandleReceivedValue(int value){
-        if(GameManager.instance.IsMainComputer){
-            //如果遠端數據變成1的話
-            //手機只有變1功能
-            //這邊也有按鈕變1功能
-            //變0只有這個涵式CD到自動變0, 或是程式重開的初始化變0
-            if(value == 1){
+
+        //如果遠端數據變成1的話
+        //手機只有變1功能
+        //這邊也有按鈕變1功能
+        //變0只有這個涵式CD到自動變0, 或是程式重開的初始化變0
+        if(value == 1){
+            if(GameManager.instance.IsMainComputer){
                 arduinoInteractive.SendData("1");
                 nextCDTime_online = Time.time + cdTime_online;
             }
+            OnShootingButtonPressed?.Invoke();
         }
     }
 
@@ -95,7 +100,15 @@ public class InteractMessage : MonoBehaviour
             if(Time.time >= nextCDTime){
                 arduinoInteractive.SendData("1");
                 nextCDTime = Time.time + cdTime;
+                StartCoroutine(LocalCDTime());
+
+                OnShootingButtonPressed?.Invoke();
             }
+        }
+
+        IEnumerator LocalCDTime(){
+            yield return new WaitForSeconds(cdTime);
+            arduinoInteractive.SendData("0");
         }
     }
 
