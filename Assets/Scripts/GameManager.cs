@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class GameManager : HimeLib.SingletonMono<GameManager>
 {
+    public Toggle MainComputerToggle;
+
+    [Header("海豚")]
     public RenderTexture DolphinRender;
     public RawImage DolphinImage;
     public Camera DolphinCamera;
@@ -16,11 +19,18 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
 
     public bool PlanMapingActive = false;
 
+    public bool IsMainComputer = true;
+
     void Start()
     {
         InitDolphinRender();
         LoadDolphScale();
         
+        MainComputerToggle.onValueChanged.AddListener(x => {
+            SystemConfig.Instance.SaveData("MainComputerToggle", x);
+            IsMainComputer = x;
+        });
+        MainComputerToggle.isOn = SystemConfig.Instance.GetData<bool>("MainComputerToggle", true);
     }
 
     // Update is called once per frame
@@ -28,15 +38,15 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
     {
         if(Input.GetKeyDown(KeyCode.PageUp)){
             DophinScale += DophinScaleSpeed;
-            DophinAnim.localScale = new Vector3(DophinScale, DophinScale, DophinScale); // 放大
+            DophinAnim.localScale = new Vector3(DophinScale, DophinScale, DophinScale); // 放大海豚
             SaveDolphScale();
         }
         if(Input.GetKeyDown(KeyCode.PageDown)){
             DophinScale -= DophinScaleSpeed;
-            DophinAnim.localScale = new Vector3(DophinScale, DophinScale, DophinScale); // 縮小 
+            DophinAnim.localScale = new Vector3(DophinScale, DophinScale, DophinScale); // 縮小海豚
             SaveDolphScale();
         }
-        if(Input.GetKeyDown(KeyCode.F4)){
+        if(Input.GetKeyDown(KeyCode.F4)){                                        // 切換海豚可見地板
             PlanMaping.SetActive(!PlanMaping.activeSelf);
             PlanMapingActive = PlanMaping.activeSelf;
         }
