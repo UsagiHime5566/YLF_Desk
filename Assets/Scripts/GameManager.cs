@@ -7,6 +7,8 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
 {
     public Toggle MainComputerToggle;
     public Text networkStatusText;
+    public Button QuitButton;
+    public InputField ResolutionInput;
 
     [Header("海豚")]
     public RenderTexture DolphinRender;
@@ -22,9 +24,10 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
 
     public bool IsMainComputer = true;
 
+    int resolutionParam = 1;
+
     void Start()
     {
-        InitDolphinRender();
         LoadDolphScale();
         
         MainComputerToggle.onValueChanged.AddListener(x => {
@@ -32,6 +35,20 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
             IsMainComputer = x;
         });
         MainComputerToggle.isOn = SystemConfig.Instance.GetData<bool>("MainComputerToggle", true);
+
+        ResolutionInput.onValueChanged.AddListener(x => {
+            if(int.TryParse(x, out int result)){
+                if(result == 0) return;
+                SystemConfig.Instance.SaveData("ResolutionParam", result);
+                resolutionParam = result;
+            }
+        });
+        ResolutionInput.text = SystemConfig.Instance.GetData<int>("ResolutionParam", 1).ToString();
+
+        QuitButton.onClick.AddListener(QuitGame);
+
+
+        InitDolphinRender();
 
         if(networkStatusText)
             StartCoroutine(CheckNetworkStatus());
@@ -57,7 +74,7 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
     }
 
     public void InitDolphinRender(){
-        DolphinRender = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32);
+        DolphinRender = new RenderTexture(Screen.width / resolutionParam, Screen.height / resolutionParam, 24, RenderTextureFormat.ARGB32);
         DolphinImage.texture = DolphinRender;
         DolphinCamera.targetTexture = DolphinRender;
     }
@@ -80,5 +97,9 @@ public class GameManager : HimeLib.SingletonMono<GameManager>
 
             yield return new WaitForSeconds(1f);
         }
+    }
+
+    public void QuitGame(){
+        Application.Quit();
     }
 }
