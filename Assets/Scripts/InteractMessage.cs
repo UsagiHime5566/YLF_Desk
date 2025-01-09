@@ -57,7 +57,8 @@ public class InteractMessage : MonoBehaviour
     void Start()
     {
         arduinoInteractive.OnRecieveData += (x) => {
-            Debug.Log("Arduino Callback");
+            //不知為何不會觸發
+            //Debug.Log("Arduino Callback");
         };
 
         // 初始化遠端數據
@@ -175,7 +176,6 @@ public class InteractMessage : MonoBehaviour
     void Update()
     {
         OnRecieveData(lastDataArduino);
-        
 
         // 測試用指定
         if (Input.GetKeyDown(KeyCode.O))
