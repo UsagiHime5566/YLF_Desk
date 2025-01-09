@@ -46,12 +46,12 @@ public class ArduinoController : MonoBehaviour
             }
 
             // 示例：按下空格鍵發送開燈指令
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 TurnOnLight();
             }
             // 按下R鍵發送關燈指令
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 TurnOffLight();
             }

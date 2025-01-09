@@ -13,7 +13,7 @@ public class InteractMessage : MonoBehaviour
     public int lastReceivedValue = 0;
 
     [Header("Arduino")]
-    public ArduinoInteractive arduinoInteractive;
+    public MyArduino arduinoInteractive;
     public string lastDataArduino = "";
 
     [Header("CD 線上時間")]
@@ -28,7 +28,27 @@ public class InteractMessage : MonoBehaviour
     public Text RemoteSignalText;
     public Text GlobalCDText;
     public Text LocalCDText;
+    public Text TXT_Msg;
 
+    public Queue<string> queueMessage = new Queue<string>();
+
+    public void DoQueueMessageStr(string x){
+        queueMessage.Enqueue($"{x} ({System.DateTime.Now})");
+        if(queueMessage.Count > 5){
+            queueMessage.Dequeue();
+        }
+    }
+
+    void ShowMessage(){
+        TXT_Msg.text = "";
+        foreach (var item in queueMessage)
+        {
+            TXT_Msg.text += item + "\n";
+        }
+    }
+
+
+    string localLastData;
 
     public System.Action OnShootingButtonPressed;
 
@@ -40,6 +60,7 @@ public class InteractMessage : MonoBehaviour
         SendIntSignal(0);
 
         StartCoroutine(EveryCheckIOT());
+
     }
 
     //自動迴圈檢查數據, 這邊是主機聽資料自動做噴水與CD
@@ -55,9 +76,16 @@ public class InteractMessage : MonoBehaviour
             if(GameManager.instance.IsMainComputer){
                 arduinoInteractive.SendData("1");
                 nextCDTime_online = Time.time + cdTime_online;
+
+                StartCoroutine(ResetData());
             }
             OnShootingButtonPressed?.Invoke();
         }
+    }
+
+    IEnumerator ResetData(){
+        yield return new WaitForSeconds(3);
+        arduinoInteractive.SendData("0");
     }
 
     IEnumerator EveryCheckIOT(){
@@ -84,8 +112,9 @@ public class InteractMessage : MonoBehaviour
 
 
     public void OnRecieveData(string data){
-        if(lastDataArduino == data) return;
-        lastDataArduino = data;
+        //Debug.Log("data passed");
+        if(localLastData == data) return;
+        localLastData = data;
 
         // 按鈕被按下
         if(data == "y"){
@@ -94,6 +123,7 @@ public class InteractMessage : MonoBehaviour
         // 按鈕被釋放
         if(data == "n"){
             //Do Nothing
+            Debug.Log("arduino n");
         }
     }
 
@@ -137,14 +167,17 @@ public class InteractMessage : MonoBehaviour
     // 測試相關
     void Update()
     {
+        OnRecieveData(lastDataArduino);
+        
+
         // 測試用指定
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             arduinoInteractive.SendData("1");
             Debug.Log("送arduino 1");
         }
         // 測試用指定
-        if (Input.GetKeyDown(KeyCode.Keypad0))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             arduinoInteractive.SendData("0");
             Debug.Log("送arduino 0");
@@ -157,6 +190,8 @@ public class InteractMessage : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.X)){
             SendIntSignal(0);
         }
+
+        ShowMessage();
     }
 
 
