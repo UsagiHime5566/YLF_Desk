@@ -83,10 +83,9 @@ public class InteractMessage : MonoBehaviour
         if(value == 1){
             if(GameManager.instance.IsMainComputer){
                 arduinoInteractive.SendData("1");
-                nextCDTime_online = Time.time + cdTime_online;
-
                 StartCoroutine(ResetData());
             }
+            nextCDTime_online = Time.time + cdTime_online;
             OnShootingButtonPressed?.Invoke();
         }
     }
