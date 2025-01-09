@@ -15,6 +15,7 @@ public class InteractMessage : MonoBehaviour
     [Header("Arduino")]
     public MyArduino arduinoInteractive;
     public string lastDataArduino = "";
+    public float resetArduinoCD = 3f;
 
     [Header("CD 線上時間")]
     public float cdTime_online = 90f;
@@ -29,6 +30,7 @@ public class InteractMessage : MonoBehaviour
     public Text GlobalCDText;
     public Text LocalCDText;
     public Text TXT_Msg;
+    public Image img_CD;
 
     public Queue<string> queueMessage = new Queue<string>();
 
@@ -67,7 +69,6 @@ public class InteractMessage : MonoBehaviour
     void HandleReceivedValue(int value){
         RemoteSignalText.text = value.ToString();
 
-
         //如果遠端數據變成1的話
         //手機只有變1功能
         //這邊也有按鈕變1功能
@@ -84,7 +85,7 @@ public class InteractMessage : MonoBehaviour
     }
 
     IEnumerator ResetData(){
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(resetArduinoCD);
         arduinoInteractive.SendData("0");
     }
 
@@ -98,12 +99,18 @@ public class InteractMessage : MonoBehaviour
                 if(Time.time >= nextCDTime_online){
                     SendIntSignal(0);
                     arduinoInteractive.SendData("0");
-                    nextCDTime_online = 2147483648f;    //避免再次檢查到
+                    nextCDTime_online = 9999999999f;    //避免再次檢查到
                 }
             }
 
             GlobalCDText.text = $"{nextCDTime_online - Time.time:F2}";
             LocalCDText.text = $"{nextCDTime - Time.time:F2}";
+
+            if(NetworkChecker.Instance.IsNetworkAvailable){
+                img_CD.fillAmount = 1 - Mathf.Clamp01((nextCDTime_online - Time.time) / cdTime_online);
+            } else {
+                img_CD.fillAmount = 1 - Mathf.Clamp01((nextCDTime - Time.time) / cdTime);
+            }
         }
     }
 
@@ -123,8 +130,11 @@ public class InteractMessage : MonoBehaviour
         // 按鈕被釋放
         if(data == "n"){
             //Do Nothing
-            Debug.Log("arduino n");
+            Debug.Log("arduino n (Release Button)");
         }
+        try{
+            ShowMessage();
+        } catch {}
     }
 
 
@@ -141,15 +151,10 @@ public class InteractMessage : MonoBehaviour
             if(Time.time >= nextCDTime){
                 arduinoInteractive.SendData("1");
                 nextCDTime = Time.time + cdTime;
-                StartCoroutine(LocalCDTime());
+                StartCoroutine(ResetData());
 
                 OnShootingButtonPressed?.Invoke();
             }
-        }
-
-        IEnumerator LocalCDTime(){
-            yield return new WaitForSeconds(cdTime);
-            arduinoInteractive.SendData("0");
         }
     }
 
@@ -171,13 +176,13 @@ public class InteractMessage : MonoBehaviour
         
 
         // 測試用指定
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             arduinoInteractive.SendData("1");
             Debug.Log("送arduino 1");
         }
         // 測試用指定
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             arduinoInteractive.SendData("0");
             Debug.Log("送arduino 0");
@@ -190,8 +195,6 @@ public class InteractMessage : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.X)){
             SendIntSignal(0);
         }
-
-        ShowMessage();
     }
 
 

@@ -29,9 +29,9 @@ public class MyArduino : UniArduinoBase
             ConnectToArduino();
     }
 
-    void Update ()
+    void Update()
 	{
-        //Debug.Log("update");
+        Debug.Log("update");
 		if(passToMainThread != null){
             //Debug.Log("thread");
 			passToMainThread.Invoke();
