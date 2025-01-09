@@ -100,7 +100,7 @@ public class MyArduino : UniArduinoBase
                     interactMessage.DoQueueMessageStr(arduinoData);
 					if(!string.IsNullOrEmpty(arduinoData)){
 						passToMainThread += () => {
-							OnRecieveData?.Invoke(arduinoData);
+							//OnRecieveData?.Invoke(arduinoData);
 						};
 					}
 				}
