@@ -2,20 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using System.Threading.Tasks;
 
 public class DolphinAnim : MonoBehaviour
 {
     public PlayableDirector timelineDirector;
     public InteractMessage interactMessage;
+    public AudioSource audioSource;
+    public int delayAnim = 300;
     
     void Start()
     {
         interactMessage.OnShootingButtonPressed += PlayTimeline;
     }
 
-    public void PlayTimeline()
+    public async void PlayTimeline()
     {
+        await Task.Delay(delayAnim);
         timelineDirector.Play();
+        audioSource.Play();
     }
 
     void Update() {
