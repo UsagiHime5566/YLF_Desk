@@ -110,9 +110,9 @@ public class InteractMessage : MonoBehaviour
             LocalCDText.text = $"{nextCDTime - Time.time:F2}";
 
             if(NetworkChecker.Instance.IsNetworkAvailable){
-                img_CD.fillAmount = 1 - Mathf.Clamp01((nextCDTime_online - Time.time) / cdTime_online);
+                img_CD.fillAmount = 1 - ((nextCDTime_online - Time.time) / cdTime_online) > 1 ? 0 : (nextCDTime_online - Time.time) / cdTime_online;
             } else {
-                img_CD.fillAmount = 1 - Mathf.Clamp01((nextCDTime - Time.time) / cdTime);
+                img_CD.fillAmount = 1 - ((nextCDTime - Time.time) / cdTime) > 1 ? 0 : (nextCDTime - Time.time) / cdTime;
             }
         }
     }
