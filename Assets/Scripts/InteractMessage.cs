@@ -30,15 +30,19 @@ public class InteractMessage : MonoBehaviour
     public Text GlobalCDText;
     public Text LocalCDText;
     public Text TXT_Msg;
+    public Text TXT_TotalSignal;
     public Image img_CD;
 
     public Queue<string> queueMessage = new Queue<string>();
+
+    int totalSignal = 0;
 
     public void DoQueueMessageStr(string x){
         queueMessage.Enqueue($"{x} ({System.DateTime.Now})");
         if(queueMessage.Count > 5){
             queueMessage.Dequeue();
         }
+        totalSignal++;
     }
 
     void ShowMessage(){
@@ -178,6 +182,7 @@ public class InteractMessage : MonoBehaviour
     void Update()
     {
         OnRecieveData(lastDataArduino);
+        TXT_TotalSignal.text = totalSignal.ToString();
 
         // 測試用指定
         if (Input.GetKeyDown(KeyCode.O))
