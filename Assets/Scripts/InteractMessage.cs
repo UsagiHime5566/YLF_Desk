@@ -56,7 +56,9 @@ public class InteractMessage : MonoBehaviour
 
     void Start()
     {
-        arduinoInteractive.OnRecieveData += OnRecieveData;
+        arduinoInteractive.OnRecieveData += (x) => {
+            Debug.Log("Arduino Callback");
+        };
 
         // 初始化遠端數據
         SendIntSignal(0);

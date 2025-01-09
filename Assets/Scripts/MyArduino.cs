@@ -31,9 +31,7 @@ public class MyArduino : UniArduinoBase
 
     void Update()
 	{
-        Debug.Log("update");
 		if(passToMainThread != null){
-            //Debug.Log("thread");
 			passToMainThread.Invoke();
 			passToMainThread = null;
 		}
@@ -97,12 +95,12 @@ public class MyArduino : UniArduinoBase
 			if (arduinoPort.IsOpen) {
 				try {
 					string arduinoData = arduinoPort.ReadLine();
-					Debug.Log(" >> Read arduino data : " + arduinoData );
+					//Debug.Log(" >> Read arduino data : " + arduinoData );
                     interactMessage.lastDataArduino = arduinoData;
                     interactMessage.DoQueueMessageStr(arduinoData);
 					if(!string.IsNullOrEmpty(arduinoData)){
 						passToMainThread += () => {
-							//OnRecieveData?.Invoke(arduinoData);
+							OnRecieveData?.Invoke(arduinoData);
 						};
 					}
 				}
