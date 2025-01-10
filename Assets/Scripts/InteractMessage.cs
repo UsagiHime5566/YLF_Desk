@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using HimeLib;
+using DG.Tweening;
 
 public class InteractMessage : MonoBehaviour
 {
@@ -32,10 +33,12 @@ public class InteractMessage : MonoBehaviour
     public Text TXT_Msg;
     public Text TXT_TotalSignal;
     public Image img_CD;
+    public CanvasGroup CG_CD;
 
     public Queue<string> queueMessage = new Queue<string>();
 
     int totalSignal = 0;
+    bool canvasVisible = true;
 
     public void DoQueueMessageStr(string x){
         queueMessage.Enqueue($"{x} ({System.DateTime.Now})");
@@ -118,6 +121,17 @@ public class InteractMessage : MonoBehaviour
             } else {
                 float amount = (nextCDTime - Time.time) / cdTime; 
                 img_CD.fillAmount = amount > 1 ? 1 : 1 - amount;
+            }
+            if(img_CD.fillAmount >= 1){
+                if(canvasVisible){
+                    canvasVisible = false;
+                    CG_CD.DOFade(0, 2f);
+                }
+            } else {
+                if(!canvasVisible){
+                    canvasVisible = true;
+                    CG_CD.DOFade(1, 1f);
+                }
             }
         }
     }
