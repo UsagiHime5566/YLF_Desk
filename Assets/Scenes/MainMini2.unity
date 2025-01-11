@@ -29021,6 +29021,7 @@ MonoBehaviour:
   interactMessage: {fileID: 1551282785}
   audioSource: {fileID: 1660929157}
   delayAnim: 300
+  isPlayOnStart: 1
 --- !u!82 &1660929157
 AudioSource:
   m_ObjectHideFlags: 0
