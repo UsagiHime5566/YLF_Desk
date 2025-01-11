@@ -10,10 +10,16 @@ public class DolphinAnim : MonoBehaviour
     public InteractMessage interactMessage;
     public AudioSource audioSource;
     public int delayAnim = 300;
+    public bool isPlayOnStart = false;
     
     void Start()
     {
         interactMessage.OnShootingButtonPressed += PlayTimeline;
+        
+        if(isPlayOnStart)
+        {
+            PlayTimeline();
+        }
     }
 
     public async void PlayTimeline()
