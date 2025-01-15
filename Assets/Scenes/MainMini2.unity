@@ -14052,8 +14052,8 @@ MonoBehaviour:
   arduinoInteractive: {fileID: 20495359}
   lastDataArduino: 
   resetArduinoCD: 3
-  cdTime_online: 90
-  cdTime: 90
+  cdTime_online: 120
+  cdTime: 120
   RemoteSignalText: {fileID: 1242447605}
   GlobalCDText: {fileID: 681259743}
   LocalCDText: {fileID: 1603595922}
