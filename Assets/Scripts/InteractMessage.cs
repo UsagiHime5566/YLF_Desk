@@ -39,6 +39,7 @@ public class InteractMessage : MonoBehaviour
 
     int totalSignal = 0;
     bool canvasVisible = true;
+    bool needSeeZero = false;
 
     public void DoQueueMessageStr(string x){
         queueMessage.Enqueue($"{x} ({System.DateTime.Now})");
@@ -91,6 +92,9 @@ public class InteractMessage : MonoBehaviour
             nextCDTime_online = Time.time + cdTime_online;
             OnShootingButtonPressed?.Invoke();
         }
+        if(value == 0){
+            needSeeZero = false;
+        }
     }
 
     IEnumerator ResetData(){
@@ -106,9 +110,13 @@ public class InteractMessage : MonoBehaviour
             if(GameManager.instance.IsMainComputer){
                 //如果CD時間到就設置遠端數據為0
                 if(Time.time >= nextCDTime_online){
-                    SendIntSignal(0);
-                    arduinoInteractive.SendData("0");
+                    needSeeZero = true;
                     nextCDTime_online = 9999999999f;    //避免再次檢查到
+                }
+
+                if(needSeeZero){
+                    Debug.Log("必須將遠端數值設置為0");
+                    SendIntSignal(0);
                 }
             }
 
