@@ -76,6 +76,15 @@ public class InteractMessage : MonoBehaviour
 
     }
 
+    void HandleNeedZero(int value){
+        if(value == 0){
+            if(needSeeZero){
+                needSeeZero = false;
+                Debug.Log("設置0請求已結束");
+            }
+        }
+    }
+
     //自動迴圈檢查數據, 這邊是主機聽資料自動做噴水與CD
     void HandleReceivedValue(int value){
         RemoteSignalText.text = value.ToString();
@@ -91,9 +100,6 @@ public class InteractMessage : MonoBehaviour
             }
             nextCDTime_online = Time.time + cdTime_online;
             OnShootingButtonPressed?.Invoke();
-        }
-        if(value == 0){
-            needSeeZero = false;
         }
     }
 
@@ -160,7 +166,7 @@ public class InteractMessage : MonoBehaviour
         // 按鈕被釋放
         if(data == "n"){
             //Do Nothing
-            Debug.Log("arduino n (Release Button)");
+            //Debug.Log("arduino n (Release Button)");
         }
         try{
             ShowMessage();
@@ -233,7 +239,7 @@ public class InteractMessage : MonoBehaviour
     public void SendIntSignal(int signal)
     {
         string url = "https://" + BaseUrl;
-        Debug.Log(url);
+        Debug.Log(url + $" ({signal})");
         StartCoroutine(SendIntRequest(url, signal));
     }
 
@@ -285,6 +291,7 @@ public class InteractMessage : MonoBehaviour
                 string response = request.downloadHandler.text;
                 if (int.TryParse(response, out int value))
                 {
+                    HandleNeedZero(value);
                     if (value != lastReceivedValue)
                     {
                         lastReceivedValue = value;

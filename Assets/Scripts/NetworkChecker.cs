@@ -43,12 +43,12 @@ public class NetworkChecker : MonoBehaviour
                 if (webRequest.result == UnityWebRequest.Result.Success)
                 {
                     isNetworkAvailable = true;
-                    Debug.Log("網路連接正常");
+                    //Debug.Log("網路連接正常");
                 }
                 else
                 {
                     isNetworkAvailable = false;
-                    Debug.LogWarning("網路連接失敗: " + webRequest.error);
+                    Debug.LogWarning("網路連接失敗: " + webRequest.error + " " + System.DateTime.Now.ToString());
                 }
             }
 
@@ -60,7 +60,7 @@ public class NetworkChecker : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Ping 檢查失敗: {e.Message}");
+                Debug.LogError($"Ping 檢查失敗: {e.Message} " + System.DateTime.Now.ToString());
                 yield break;
             }
 
@@ -69,7 +69,7 @@ public class NetworkChecker : MonoBehaviour
             if (ping != null && ping.isDone && ping.time >= 0)
             {
                 isNetworkAvailable = true;
-                Debug.Log($"Ping 延遲: {ping.time}ms");
+                Debug.Log($"Ping 延遲: {ping.time}ms " + System.DateTime.Now.ToString());
             }
 
             yield return new WaitForSeconds(30f); // 每30秒檢查一次
