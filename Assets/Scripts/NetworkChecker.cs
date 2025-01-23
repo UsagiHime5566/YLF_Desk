@@ -38,12 +38,14 @@ public class NetworkChecker : MonoBehaviour
             // 使用UnityWebRequest進行網路檢查
             using (UnityWebRequest webRequest = UnityWebRequest.Get(testWebsite))
             {
+                webRequest.SetRequestHeader("Authorization", "Bearer fa1a4509915146fdb07ae71645b561cf");
+
                 yield return webRequest.SendWebRequest();
 
                 if (webRequest.result == UnityWebRequest.Result.Success)
                 {
                     isNetworkAvailable = true;
-                    //Debug.Log("網路連接正常");
+                    //Debug.Log("網路連接正常 "+ webRequest.downloadHandler.text);
                 }
                 else
                 {
@@ -68,7 +70,7 @@ public class NetworkChecker : MonoBehaviour
 
             if (ping != null && ping.isDone && ping.time >= 0)
             {
-                isNetworkAvailable = true;
+                //isNetworkAvailable = true;
                 Debug.Log($"Ping 延遲: {ping.time}ms " + System.DateTime.Now.ToString());
             }
 

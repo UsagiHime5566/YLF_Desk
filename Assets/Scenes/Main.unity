@@ -30717,7 +30717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pingAddress: 8.8.8.8
-  testWebsite: http://www.google.com
+  testWebsite: https://ylf2025.iottalk.tw/
 --- !u!4 &2031882744
 Transform:
   m_ObjectHideFlags: 0
